@@ -13,34 +13,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        
-        let userOption = UserDefaults.standard.value(forKey: "UserOption")
-        
-        if  let user = userOption
-        {
-            if !(user as! String).isEmpty {
-            
-            let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-
-            if (userOption as! String == "CAND")
-             {
-                appDelegate.window?.rootViewController = createMenuView()
-            }
-             else
-             {
-                appDelegate.window?.rootViewController = companyMenuView()
-            }
-            }
-        }
-        else
-        {
-            
-
-            let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.window?.rootViewController =  LandingView()
-            
-        }
-        
+//        
+//        let userOption = UserDefaults.standard.value(forKey: "UserOption")
+//        
+//        if  let user = userOption
+//        {
+//            if !(user as! String).isEmpty {
+//            
+//            let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+//
+//            if (userOption as! String == "CAND")
+//             {
+//                appDelegate.window?.rootViewController = createMenuView()
+//            }
+//             else
+//             {
+//                appDelegate.window?.rootViewController = companyMenuView()
+//            }
+//            }
+//        }
+//        else
+//        {
+//            
+//
+//            let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+//            appDelegate.window?.rootViewController =  LandingView()
+//            
+//        }
+//        
 
         
         // Override point for customization after application launch.

@@ -28,6 +28,7 @@
 		4D42EE721EBF787C00675DFC /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D42EE711EBF787C00675DFC /* Reachability.m */; };
 		4D52737D1EC8AD4100F127A0 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D52737C1EC8AD4100F127A0 /* TableViewCell.swift */; };
 		4D5273811EC8CF1F00F127A0 /* UserShortListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5273801EC8CF1F00F127A0 /* UserShortListViewController.swift */; };
+		4D8B85251EFE64DA00F203BD /* SampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B85241EFE64DA00F203BD /* SampleViewController.swift */; };
 		4DFD842C1ED994D800AF7527 /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFD842B1ED994D800AF7527 /* ExploreViewController.swift */; };
 		C2949B241EF7B61000F659E3 /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = C2949B231EF7B61000F659E3 /* placeholder.png */; };
 		E8618AE282A8F319FDBBBA83 /* Pods_GradNext.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2674BB98347D00F71EE15AF6 /* Pods_GradNext.framework */; };
@@ -91,6 +92,7 @@
 		4D42EE711EBF787C00675DFC /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		4D52737C1EC8AD4100F127A0 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		4D5273801EC8CF1F00F127A0 /* UserShortListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserShortListViewController.swift; sourceTree = "<group>"; };
+		4D8B85241EFE64DA00F203BD /* SampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SampleViewController.swift; path = GradNext/SampleViewController.swift; sourceTree = "<group>"; };
 		4DFD842B1ED994D800AF7527 /* ExploreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
 		C2949B231EF7B61000F659E3 /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = placeholder.png; path = ../placeholder.png; sourceTree = "<group>"; };
 		E26B4850DD196B5A01EDB370 /* Pods-GradNext.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GradNext.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GradNext/Pods-GradNext.debug.xcconfig"; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 		140A35BE1D096A7D00D89FD8 = {
 			isa = PBXGroup;
 			children = (
+				4D8B85241EFE64DA00F203BD /* SampleViewController.swift */,
 				140A35C91D096A7D00D89FD8 /* GradNext */,
 				140A35C81D096A7D00D89FD8 /* Products */,
 				4A6DF74E163677CBC9EACBBE /* Pods */,
@@ -597,6 +600,7 @@
 				F2416A9B1ED1B86800C19363 /* CandidateProfileTableViewCell.swift in Sources */,
 				F2416A9C1ED1B86800C19363 /* SecondTableViewCell.swift in Sources */,
 				F2416A9F1ED1B86D00C19363 /* CandidateMainProfileViewController.swift in Sources */,
+				4D8B85251EFE64DA00F203BD /* SampleViewController.swift in Sources */,
 				F2416AA41ED1B8DE00C19363 /* SelectedSkillsTableViewCell.swift in Sources */,
 				4D2459911ED1CC4D001600EA /* serachTalentViewController.swift in Sources */,
 				4D2459901ED1CC4D001600EA /* ManageJobViewController.swift in Sources */,
