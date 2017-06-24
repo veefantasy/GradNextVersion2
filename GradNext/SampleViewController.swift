@@ -10,20 +10,22 @@ import UIKit
 import Alamofire
 import AlertBar
 
-class SampleViewController: UIViewController {
-    @IBOutlet var passcodetext: UITextField!
-    @IBOutlet weak var picker: UIPickerView!
+class SampleViewController: UIViewController{
+    var suburbs = NSArray();
+    var state = NSArray();
+    @IBOutlet var postcodetext: UITextField!
+    @IBOutlet weak var pickersuburbs: UIPickerView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
     @IBAction func click(_ sender: Any) {
-        if(passcodetext.text == "")
+        if(postcodetext.text == "")
         {
-            AlertBar.show(.info, message: "Please enter your user name")
+            AlertBar.show(.info, message: "Please enter your postcode")
             
-            passcodetext.becomeFirstResponder()
+            postcodetext.becomeFirstResponder()
         }
         else
         {
@@ -32,11 +34,7 @@ class SampleViewController: UIViewController {
                 self.view.showLoader()
 //               http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=2600
                 
-                
-//                let url = URL(string: "http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=2600")!
-                
-               
-                let url1 = URL(string: "http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=\((passcodetext.text!))")!
+               let url1 = URL(string: "http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=\(postcodetext.text!)")!
                 
                 var urlRequest = URLRequest(url: url1)
                 urlRequest.httpMethod = "POST"
@@ -54,27 +52,17 @@ class SampleViewController: UIViewController {
                             
                             let final =  value as! [String : Any]
                             print(final)
-                            //                        let resetsuccessful = final["IsResetSuccessful"] as! Bool
-                            //                        print(resetsuccessful)
-                            //                        let statusmessage = final["StatusMessage"] as? String
-                            //                        print(statusmessage!)
-                            //                        if(resetsuccessful==true)
-                            //                        {
-                            //                            self.alert(title: "Successful", message: statusmessage, buttonTitle: "Ok")
-                            //                        }
-                            //                        else
-                            //                        {
-                            //                            self.alert(title: "Reset Unsuccessful", message: statusmessage, buttonTitle: "Ok")
-                            //                        }
+                            self.suburbs = final["Suburbs"] as! NSArray
+                            print(self.suburbs)
+                            print(self.suburbs[5],self.suburbs.count)
+                            self.state = final["States"] as! NSArray
+                            print(self.state[0]);
+                            self.pickersuburbs.reloadComponent(0)
                         }
                     case .failure(let error):
                         print(error)
                     }
                     self.view.hideLoader()
-                    
-                    // value = true
-                    //                self.userNameTxtField.text = "";
-                    //                self.passwordTxtField.text = "";
                     
                     self.view.endEditing(true)
                 }
@@ -88,6 +76,27 @@ class SampleViewController: UIViewController {
             
         }
         
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if(suburbs.count != 0)
+        {
+            return suburbs.count
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if(suburbs.count != 0)
+        {
+            return suburbs[row] as? String
+        }
+        else
+        {
+            return "nil"
+        }
     }
 
     override func didReceiveMemoryWarning() {

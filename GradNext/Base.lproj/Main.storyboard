@@ -1538,8 +1538,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <outlet property="passcodetext" destination="0kY-dt-VxF" id="l4Z-PN-UOb"/>
-                        <outlet property="picker" destination="PwV-g2-Ir5" id="SDY-aA-Ia9"/>
+                        <outlet property="pickersuburbs" destination="PwV-g2-Ir5" id="ywa-pe-aKj"/>
+                        <outlet property="postcodetext" destination="0kY-dt-VxF" id="jEQ-WA-Bcf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c0c-M7-Idj" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3615,7 +3615,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uj0-tV-Bvv" id="8I7-xG-EUm">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="66"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="companyl" translatesAutoresizingMaskIntoConstraints="NO" id="YLv-Hf-fXQ">
