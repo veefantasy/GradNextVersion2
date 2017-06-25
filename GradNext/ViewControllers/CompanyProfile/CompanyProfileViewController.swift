@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import AlertBar
+import Alamofire
 
-class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
+class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UIPickerViewDataSource,UIPickerViewDelegate {
     @IBOutlet weak var txtAboutUs: UITextView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var txtCompanyName: UITextField!
@@ -20,14 +22,23 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
     @IBOutlet weak var btnCreate: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     
+    
+    
     let imagePicker = UIImagePickerController()
+    let pickerView = UIPickerView()
     var activeField: UITextField?
     var activeTextView: UITextView?
+    var suburbs = NSArray();
+    var state = NSArray();
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         customViews()
         imagePicker.delegate = self
         self.title = "Company Profile"
+        
+        pickerView.dataSource = self
+        pickerView.delegate = self
         // Do any additional setup after loading the view.
         registerForKeyboardNotifications()
     }
@@ -170,12 +181,24 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
     func textFieldDidBeginEditing(_ textField: UITextField){
         Utilities.setTextFieldCornerRadius(forTextField: textField, withRadius: 3.0, withBorderColor: UIColor.blue)
         activeField = textField
+        if(textField == txtSuburb){
+        txtSuburb.inputView = pickerView
+        self.showTimePicker(textField: txtSuburb)
+        }
+        
+        
     }
     
     func textFieldDidEndEditing(_ textField: UITextField){
          Utilities.setTextFieldCornerRadius(forTextField: textField, withRadius: 3.0, withBorderColor: UIColor.gray)
         activeField = nil
+        if(textField == txtPostCode)
+        {
+            self.postcodeparser()
+        }
     }
+    
+    
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         activeTextView = textView
@@ -184,10 +207,143 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
     
     func textViewDidEndEditing(_ textView: UITextView) {
         activeTextView = nil
+        
     }
-
-  
     
+    func postcodeparser(){
+    if(txtPostCode.text == "")
+            {
+                AlertBar.show(.info, message: "Please enter your postcode")
+                
+                txtPostCode.becomeFirstResponder()
+            }
+            else
+            {
+                if(Utilities.hasConnectivity())
+                {
+                    self.view.showLoader()
+                    //               http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=2600
+                    
+                    let url1 = URL(string: "http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=\(txtPostCode.text!)")!
+                    
+                    var urlRequest = URLRequest(url: url1)
+                    urlRequest.httpMethod = "POST"
+                    do {
+                        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: [] , options: [])
+                    } catch {
+                    }
+                    urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                    
+                    Alamofire.request(urlRequest).responseJSON {
+                        response in
+                        switch response.result {
+                        case .success:
+                            if let value = response.result.value {
+                                
+                                let final =  value as! [String : Any]
+                                print(final)
+                                self.suburbs = final["Suburbs"] as! NSArray
+                                print(self.suburbs)
+                                print(self.suburbs.count)
+                                self.state = final["States"] as! NSArray
+                                print(self.state[0]);
+                                self.pickerView.reloadAllComponents()
+                                
+                            }
+                        case .failure(let error):
+                            print(error)
+                        }
+                        self.view.hideLoader()
+                        
+                        self.view.endEditing(true)
+                    }
+                }
+                    
+                else
+                {
+                    
+                    alert(title: "No InternetConnection", message: "Internet connection appears to be offline", buttonTitle: "Ok")
+                }
+                
+            }
+            
+        
+    }
+  
+    public func numberOfComponents(in pickerView: UIPickerView) -> Int
+    {
+        return 1;
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int{
+        //        return 2
+        if(suburbs.count != 0)
+        {
+            return suburbs.count
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if(suburbs.count != 0)
+        {
+            txtSuburb.text = "Select the Suburbs"
+            return suburbs[row] as? String
+        }
+        else
+        {
+            return "Please Enter Post Code"
+        }
+        //        return "hello";
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        if(suburbs.count != 0 )
+        {
+        txtSuburb.text = (suburbs[row] as! String)
+        txtState.text = (state[0] as! String)
+        }
+        else
+        {
+            txtSuburb.text = "Please Enter Post Code"
+        }
+    }
+    func showTimePicker(textField: UITextField) {
+        
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: self.view.frame.size.height/6, width: self.view.frame.size.width, height: 40.0))
+        
+        toolBar.layer.position = CGPoint(x: self.view.frame.size.width/2, y: self.view.frame.size.height-20.0)
+        toolBar.barStyle = UIBarStyle.blackTranslucent
+        toolBar.tintColor = UIColor.white
+        toolBar.backgroundColor = UIColor.black
+        
+        
+        let okBarBtn = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(CompanyProfileViewController.donePressed))
+        
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: self, action: nil)
+        
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width / 3, height: self.view.frame.size.height))
+        label.font = UIFont(name: "Helvetica", size: 12)
+        label.backgroundColor = UIColor.clear
+        label.textColor = UIColor.white
+        label.text = "Select your Suburb"
+        label.textAlignment = NSTextAlignment.center
+        
+        //        let textBtn = UIBarButtonItem(customView: label)
+        
+        toolBar.setItems([flexSpace,flexSpace,okBarBtn], animated: true)
+        
+        textField.inputAccessoryView = toolBar
+    }
+    
+    func donePressed(_ sender: UITextField) {
+        
+        txtSuburb.resignFirstResponder()
+        self.view.endEditing(true)
+        
+    }
     
     /*
      // MARK: - Navigation

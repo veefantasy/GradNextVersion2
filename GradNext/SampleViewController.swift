@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import AlertBar
 
-class SampleViewController: UIViewController{
+class SampleViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate{
     var suburbs = NSArray();
     var state = NSArray();
     @IBOutlet var postcodetext: UITextField!
@@ -77,7 +77,12 @@ class SampleViewController: UIViewController{
         }
         
     }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+     public func numberOfComponents(in pickerView: UIPickerView) -> Int
+     {
+        return 1;
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int{
+//        return 2
         if(suburbs.count != 0)
         {
             return suburbs.count
@@ -97,6 +102,7 @@ class SampleViewController: UIViewController{
         {
             return "nil"
         }
+//        return "hello";
     }
 
     override func didReceiveMemoryWarning() {

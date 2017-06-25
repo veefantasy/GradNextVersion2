@@ -215,6 +215,7 @@ class CandidateProfileViewController: UIViewController,UITextFieldDelegate,UIIma
    
     func textViewDidEndEditing(_ textView: UITextView) {
         activeTextView = nil
+        
     }
 
    
