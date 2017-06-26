@@ -42,7 +42,7 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
         // Do any additional setup after loading the view.
         registerForKeyboardNotifications()
     }
-  
+    
     @IBAction func closeButtonClicked(_ sender: Any) {
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
@@ -56,14 +56,14 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
         deregisterFromKeyboardNotifications()
         
     }
-
+    
     func customViews() {
-         Utilities.setTextFieldCornerRadius(forTextField: txtCompanyName, withRadius: 3.0, withBorderColor: UIColor.gray)
-         Utilities.setTextFieldCornerRadius(forTextField: txtAddress, withRadius: 3.0, withBorderColor: UIColor.gray)
-         Utilities.setTextFieldCornerRadius(forTextField: txtPostCode, withRadius: 3.0, withBorderColor: UIColor.gray)
-         Utilities.setTextFieldCornerRadius(forTextField: txtCountry, withRadius: 3.0, withBorderColor: UIColor.gray)
-         Utilities.setTextFieldCornerRadius(forTextField: txtState, withRadius: 3.0, withBorderColor: UIColor.gray)
-         Utilities.setTextFieldCornerRadius(forTextField: txtSuburb, withRadius: 3.0, withBorderColor: UIColor.gray)
+        Utilities.setTextFieldCornerRadius(forTextField: txtCompanyName, withRadius: 3.0, withBorderColor: UIColor.gray)
+        Utilities.setTextFieldCornerRadius(forTextField: txtAddress, withRadius: 3.0, withBorderColor: UIColor.gray)
+        Utilities.setTextFieldCornerRadius(forTextField: txtPostCode, withRadius: 3.0, withBorderColor: UIColor.gray)
+        Utilities.setTextFieldCornerRadius(forTextField: txtCountry, withRadius: 3.0, withBorderColor: UIColor.gray)
+        Utilities.setTextFieldCornerRadius(forTextField: txtState, withRadius: 3.0, withBorderColor: UIColor.gray)
+        Utilities.setTextFieldCornerRadius(forTextField: txtSuburb, withRadius: 3.0, withBorderColor: UIColor.gray)
         
         txtAddress.setLeftPaddingPoints(10)
         txtPostCode.setLeftPaddingPoints(10)
@@ -79,7 +79,7 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
         btnCreate.layer.cornerRadius = 3
     }
     
-     // MARK: - Button Actions
+    // MARK: - Button Actions
     
     @IBAction func btnPhotoLibraryClicked(_ sender: Any) {
         imagePicker.allowsEditing = false
@@ -94,7 +94,7 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
     }
     
     @IBAction func createButtonClicked(_ sender: Any) {
-          let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
         
         appDelegate.window?.rootViewController = appDelegate.companyMenuView()
     }
@@ -111,7 +111,7 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
-
+    
     
     // MARK: - TextField Delegate Methods
     
@@ -182,15 +182,13 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
         Utilities.setTextFieldCornerRadius(forTextField: textField, withRadius: 3.0, withBorderColor: UIColor.blue)
         activeField = textField
         if(textField == txtSuburb){
-        txtSuburb.inputView = pickerView
-        self.showTimePicker(textField: txtSuburb)
         }
         
         
     }
     
     func textFieldDidEndEditing(_ textField: UITextField){
-         Utilities.setTextFieldCornerRadius(forTextField: textField, withRadius: 3.0, withBorderColor: UIColor.gray)
+        Utilities.setTextFieldCornerRadius(forTextField: textField, withRadius: 3.0, withBorderColor: UIColor.gray)
         activeField = nil
         if(textField == txtPostCode)
         {
@@ -211,65 +209,67 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
     }
     
     func postcodeparser(){
-    if(txtPostCode.text == "")
+        if(txtPostCode.text == "")
+        {
+            AlertBar.show(.info, message: "Please enter your postcode")
+            
+            txtPostCode.becomeFirstResponder()
+        }
+        else
+        {
+            if(Utilities.hasConnectivity())
             {
-                AlertBar.show(.info, message: "Please enter your postcode")
+                self.view.showLoader()
                 
-                txtPostCode.becomeFirstResponder()
+                let url1 = URL(string: "http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=\(txtPostCode.text!)")!
+                
+                var urlRequest = URLRequest(url: url1)
+                urlRequest.httpMethod = "POST"
+                do {
+                    urlRequest.httpBody = try JSONSerialization.data(withJSONObject: [] , options: [])
+                } catch {
+                }
+                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                
+                Alamofire.request(urlRequest).responseJSON {
+                    response in
+                    switch response.result {
+                    case .success:
+                        if let value = response.result.value {
+                            
+                            let final =  value as! [String : Any]
+                            print(final)
+                            self.suburbs = final["Suburbs"] as! NSArray
+                            print(self.suburbs)
+                            print(self.suburbs.count)
+                            self.state = final["States"] as! NSArray
+                            print(self.state[0]);
+                            self.showTimePicker(textField: self.txtSuburb)
+                            self.txtSuburb.inputView = self.pickerView
+                            
+                            self.pickerView.reloadAllComponents()
+                            
+                        }
+                    case .failure(let error):
+                        print(error)
+                    }
+                    self.view.hideLoader()
+                    
+                    self.view.endEditing(true)
+                }
             }
+                
             else
             {
-                if(Utilities.hasConnectivity())
-                {
-                    self.view.showLoader()
-                    //               http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=2600
-                    
-                    let url1 = URL(string: "http://service.gradnext.com/api/Job/GetPostalLookup?PostCode=\(txtPostCode.text!)")!
-                    
-                    var urlRequest = URLRequest(url: url1)
-                    urlRequest.httpMethod = "POST"
-                    do {
-                        urlRequest.httpBody = try JSONSerialization.data(withJSONObject: [] , options: [])
-                    } catch {
-                    }
-                    urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                    
-                    Alamofire.request(urlRequest).responseJSON {
-                        response in
-                        switch response.result {
-                        case .success:
-                            if let value = response.result.value {
-                                
-                                let final =  value as! [String : Any]
-                                print(final)
-                                self.suburbs = final["Suburbs"] as! NSArray
-                                print(self.suburbs)
-                                print(self.suburbs.count)
-                                self.state = final["States"] as! NSArray
-                                print(self.state[0]);
-                                self.pickerView.reloadAllComponents()
-                                
-                            }
-                        case .failure(let error):
-                            print(error)
-                        }
-                        self.view.hideLoader()
-                        
-                        self.view.endEditing(true)
-                    }
-                }
-                    
-                else
-                {
-                    
-                    alert(title: "No InternetConnection", message: "Internet connection appears to be offline", buttonTitle: "Ok")
-                }
                 
+                alert(title: "No InternetConnection", message: "Internet connection appears to be offline", buttonTitle: "Ok")
             }
             
+        }
+        
         
     }
-  
+    
     public func numberOfComponents(in pickerView: UIPickerView) -> Int
     {
         return 1;
@@ -302,8 +302,8 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
     {
         if(suburbs.count != 0 )
         {
-        txtSuburb.text = (suburbs[row] as! String)
-        txtState.text = (state[0] as! String)
+            txtSuburb.text = (suburbs[row] as! String)
+            txtState.text = (state[0] as! String)
         }
         else
         {
@@ -354,6 +354,6 @@ class CompanyProfileViewController: UIViewController, UITextFieldDelegate,UIImag
      // Pass the selected object to the new view controller.
      }
      */
-
+    
 }
 
